@@ -3,7 +3,7 @@ import {config} from 'dotenv'
 
 config();
 
-const connectionString = process.env.MONGO_URl;
+const connectionString = process.env.MONGO_URL;
 
 
 export const con=async()=>{

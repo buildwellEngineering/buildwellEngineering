@@ -11,11 +11,11 @@ const app = express();
 app.use(express.json({ limit: '10mb' }));
 
 const corsOptions = {
-    origin: 'https://build-well-front-end.vercel.app', // Allow specific origin
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    allowedHeaders: ['Content-Type'], // Allowed headers
     credentials: true // If you need credentials
-  };
+};
 app.use(cors(corsOptions));
 con();
 

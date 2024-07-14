@@ -9,7 +9,14 @@ import messagesRouter from './routes/MessagesRoute.js'
 
 const app = express();
 app.use(express.json({ limit: '10mb' }));
-app.use(cors());
+
+const corsOptions = {
+    origin: 'https://build-well-front-end.vercel.app', // Allow specific origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    credentials: true // If you need credentials
+  };
+app.use(cors(corsOptions));
 con();
 
 app.use('/adminLogin',adminPanelLoginRouter);

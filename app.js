@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json({ limit: '10mb' }));
 
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'https://build-well-front-end.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
     allowedHeaders: ['Content-Type'], // Allowed headers
     credentials: true // If you need credentials

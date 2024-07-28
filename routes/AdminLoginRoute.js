@@ -1,10 +1,11 @@
 import express from 'express';
-import { adminLogin } from '../controllers/AdminLoginController.js';
+import { adminLogin, verifyOtp } from '../controllers/AdminLoginController.js';
 import { CheckEmptyRequest } from '../middleware/CheckEmptyRequest.js';
 import {CheckNotExist} from '../middleware/CheckNotExist.js'
 
 const router = express.Router();
 
-router.post('/login',CheckEmptyRequest,CheckNotExist,adminLogin);
+router.post('/login',adminLogin);
+router.post('/verifyOtp',verifyOtp);
 
 export default router;

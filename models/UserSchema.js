@@ -13,6 +13,12 @@ const userSchema =mongoose.Schema({
     loginStatus:{
         type:Boolean,
         default:false
+    },
+    otp: {
+        type: String,
+    },
+    otpExpiresAt: {
+        type: Date,
     }
 },{timeStamps:true});
 

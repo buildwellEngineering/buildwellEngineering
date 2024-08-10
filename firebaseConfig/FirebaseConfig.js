@@ -3,9 +3,9 @@
 
 import admin from 'firebase-admin';
 
-import { config } from 'dotenv';
+import dotenv from 'dotenv';
 
-config();
+dotenv.config({path:'./.env'});
 
 const serviceAccount = {
   type: process.env.FIREBASE_TYPE,

@@ -1,7 +1,7 @@
 import mongoose, { connect } from "mongoose";
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 
-dotenv.config({path:'../.env'});
+// dotenv.config({path:'../.env'});
 
 const connectionString = process.env.MONGO_URL;
 
@@ -9,7 +9,7 @@ const connectionString = process.env.MONGO_URL;
 export const con=async()=>{
     try {
         // await mongoose.connect('mongodb://127.0.0.1:27017/Construct');
-        await mongoose.connect(connectionString);
+        await mongoose.connect(process.env.MONGO_URL);
         console.log("DATABASE CONNECTED SUCCESSFULLY !!!");
     } catch (error) {
         console.log("DATABASE CONNECTION FAILED !!!",error);

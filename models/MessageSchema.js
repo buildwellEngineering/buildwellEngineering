@@ -17,9 +17,17 @@ const messageSchema =mongoose.Schema({
         type:String,
         required:true
     },
+    message:{
+        type:String,
+        required:true
+    },
     readByAdmin:{
         type:Boolean,
         default:false
+    },
+    date:{
+        type: Date,
+        default: Date.now
     }
 },{timeStamps:true});
 

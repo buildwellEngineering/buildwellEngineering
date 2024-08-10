@@ -7,9 +7,6 @@ const userSchema =mongoose.Schema({
     password:{
         type:String, 
     },
-    refreshToken:{
-        type:String,
-    },
     loginStatus:{
         type:Boolean,
         default:false

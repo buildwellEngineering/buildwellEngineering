@@ -1,38 +1,30 @@
 import section from '../models/SectionSchema.js'
 import project from '../models/ProjectsSchema.js';
-import multer from 'multer';
-import bucket from "../firebaseConfig/FirebaseConfig.js";
-import { getDownloadURL } from "firebase-admin/storage";
+import achievement from '../models/AchievementSchema.js'; // Adjust the path as needed
 
 export const aboutUs = async (req, res) => {
 
     try {
-        console.log(3636)
 
         const homePageRequest = await section.findOne({ sectionName: "aboutUs" });
 
-        console.log(3636)
 
         const { sectionName, sectionText, sectionMediaUrl } = homePageRequest
 
-        console.log(3636)
 
         const sectionMediaUrl1 = sectionMediaUrl[0];
-        console.log(sectionMediaUrl1)
 
         const data = { sectionName, sectionText, sectionMediaUrl1 }
 
-        res.send(data)
-        console.log(data)
+        res.send(data);
 
     } catch (error) {
-
+      res.status(500).send("Internal Server Error",error);
     }
 }
 
 export const ourMissionOurTechnologies = async (req, res) => {
     try {
-        console.log("Starting request for ourMissionOurTechnologies...");
     
         // Fetch both documents asynchronously
         const missionPromise = section.findOne({ sectionName: "ourMission" });
@@ -41,7 +33,6 @@ export const ourMissionOurTechnologies = async (req, res) => {
         // Wait for both promises to resolve
         const [missionDoc, technologiesDoc] = await Promise.all([missionPromise, technologiesPromise]);
     
-        console.log("Fetched documents from DB:", { missionDoc, technologiesDoc });
     
         // If either document is not found, handle the error
         if (!missionDoc || !technologiesDoc) {
@@ -67,13 +58,10 @@ export const ourMissionOurTechnologies = async (req, res) => {
           sectionText2,
           sectionMediaUrl
         };
-    
-        console.log("Response data for ourMissionOurTechnologies:", data);
-    
+        
         res.send(data);
     
       } catch (error) {
-        console.error('Error fetching sections:', error);
         res.status(500).json({ message: 'Failed to fetch section data', error: error.message });
       }
   };
@@ -82,7 +70,6 @@ export const ourMissionOurTechnologies = async (req, res) => {
 // Function to fetch header data
   export const headerController = async (req, res) => {
     try {
-        console.log("Fetching header data...");
 
         // Fetch the header section from the database
         const headerSection = await section.findOne({ sectionName: "header" });
@@ -98,12 +85,10 @@ export const ourMissionOurTechnologies = async (req, res) => {
         // Construct the response object
         const data = { sectionName, sectionText, sectionMediaUrl };
 
-        console.log("Header data fetched successfully:", data);
 
         // Send the response
         res.send(data);
     } catch (error) {
-        console.error('Error fetching header section:', error);
         res.status(500).json({ message: 'Failed to fetch header section data', error: error.message });
     }
 };
@@ -112,28 +97,33 @@ export const projectsController = async (req, res) => {
 
 
   try {
-    //console.log(3636)
 
     const projects = await project.find({ projectDisplay: true });
 
-    //console.log(3636)
 
     const data = projects.map((project) => ({
       projectMediaUrl: project.projectMediaUrl, // Access the property directly
     }));
 
-    //const { projectTitle, projectMedia, projectDescription } = homePageRequest
-
-    //console.log(3636)
-
-    // const data = { projectTitle, projectDescription }
 
     res.send(data)
-    //console.log(data)
 
   } catch (error) {
-    console.error('Error fetching projects:', error);
     res.status(500).json({ message: 'Failed to fetch projects data', error });
   }
 
 }
+
+
+export const sectionController = async (req, res) => {
+  try {
+    // Fetch all achievements from the database
+    const achievements = await achievement.find({});
+
+    // Send the fetched data to the frontend
+    res.json(achievements);
+  } catch (error) {
+    // Handle any errors
+    res.status(500).send({ message: "Error fetching achievements", error });
+  }
+};

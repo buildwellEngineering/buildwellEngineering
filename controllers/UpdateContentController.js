@@ -1,4 +1,4 @@
-
+import achievement from '../models/AchievementSchema.js'; // Adjust the path as needed
 import section from '../models/SectionSchema.js';
 import multer from 'multer';
 import bucket from "../firebaseConfig/FirebaseConfig.js";
@@ -48,7 +48,6 @@ export const aboutUsUpdateController = async (req, res) => {
 
         // Handle errors during upload
         blobStream.on('error', (err) => {
-          console.error('Error uploading image to Firebase:', err);
           return res.status(500).json({ message: 'Failed to upload image to Firebase', error: err.message });
         });
 
@@ -79,105 +78,14 @@ export const aboutUsUpdateController = async (req, res) => {
         res.status(200).json({ message: 'Section updated successfully', data: aboutUsSection });
       }
     } catch (error) {
-      console.error('Error updating section:', error);
       res.status(500).json({ message: 'Failed to update section', error: error.message });
     }
   });
 };
 
 
-// export const ourMissionOurTechnologiesUpdateController = async (req, res) => {
-//   const { data } = req.body;
-//   const { sectionText1, sectionText2, sectionMedia } = data;
-
-//   console.log('Request Body:', req.body); // Log the request body to see what's being sent
-//   console.log('Section Data:', data); // Log the section data
-
-//   try {
-//     // Update the 'ourMission' document
-//     const ourMission = await section.findOneAndUpdate(
-//       { sectionName: 'ourMission' },
-//       { sectionText1, sectionMedia },
-//       { new: true, upsert: true }
-//     );
-
-//     console.log('Updated OurMission Document:', ourMission);
-
-//     // Update the 'ourTechnologies' document
-//     const ourTechnologies = await section.findOneAndUpdate(
-//       { sectionName: 'OurTechnologies' },
-//       { sectionText2 },
-//       { new: true, upsert: true }
-//     );
-
-
-
-
-
-
 export const ourMissionOurTechnologiesUpdateController = async (req, res) => {
-  // const { data } = req.body;
-  // const { sectionText1, sectionText2, sectionMedia } = data;
-
-  // console.log('Request Body:', req.body); // Log the request body to see what's being sent
-  // console.log('Section Data:', data); // Log the section data
-
-  // try {
-  //   // Update 'ourMission' section
-  //   if (sectionText1 || sectionMedia) {
-  //     const ourMissionSection = await section.findOne({ sectionName: 'ourMission' });
-
-  //     if (!ourMissionSection) {
-  //       // If 'ourMission' document does not exist, create a new one
-  //       ourMissionSection = new section({
-  //         sectionName: 'ourMission',
-  //         sectionText: sectionText1 || '',
-  //         sectionMedia: sectionMedia || ''
-  //       });
-  //     } else {
-  //       // Update existing 'ourMission' document
-  //       if (sectionText1) {
-  //         ourMissionSection.sectionText = sectionText1;
-  //       }
-  //       if (sectionMedia) {
-  //         ourMissionSection.sectionMedia = sectionMedia;
-  //       }
-  //     }
-
-  //     await ourMissionSection.save();
-  //     console.log('Updated ourMission Section:', ourMissionSection);
-  //   }
-
-  //   // Update 'ourTechnologies' section
-  //   if (sectionText2 || sectionMedia) {
-  //     const ourTechnologiesSection = await section.findOne({ sectionName: 'ourTechnologies' });
-
-  //     if (!ourTechnologiesSection) {
-  //       // If 'ourTechnologies' document does not exist, create a new one
-  //       ourTechnologiesSection = new section({
-  //         sectionName: 'ourTechnologies',
-  //         sectionText: sectionText2 || '',
-  //         sectionMedia: sectionMedia || ''
-  //       });
-  //     } else {
-  //       // Update existing 'ourTechnologies' document
-  //       if (sectionText2) {
-  //         ourTechnologiesSection.sectionText = sectionText2;
-  //       }
-  //       if (sectionMedia) {
-  //         ourTechnologiesSection.sectionMedia = sectionMedia;
-  //       }
-  //     }
-
-  //     await ourTechnologiesSection.save();
-  //     console.log('Updated ourTechnologies Section:', ourTechnologiesSection);
-  //   }
-
-  //   res.status(200).json({ message: 'Sections updated successfully' });
-  // } catch (error) {
-  //   console.error('Error updating sections:', error);
-  //   res.status(500).json({ message: 'Failed to update sections', error: error.message });
-  // }
+  
 
   media(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
@@ -188,7 +96,6 @@ export const ourMissionOurTechnologiesUpdateController = async (req, res) => {
 
     const { sectionText1, sectionText2, imageChange } = req.body;
 
-    //console.log({ sectionText1, sectionText2, imageChange })
     try {
       // Find both sections first
       let ourMissionSection = await section.findOne({ sectionName: 'ourMission' });
@@ -227,7 +134,6 @@ export const ourMissionOurTechnologiesUpdateController = async (req, res) => {
 
         // Handle errors during upload
         blobStream.on('error', (err) => {
-          console.error('Error uploading image to Firebase:', err);
           return res.status(500).json({ message: 'Failed to upload image to Firebase', error: err.message });
         });
 
@@ -237,10 +143,7 @@ export const ourMissionOurTechnologiesUpdateController = async (req, res) => {
           if (ourMissionSection.sectionFileName[0]) {
             await bucket.file(`homepage/${ourMissionSection.sectionFileName[0]}`).delete();
           }
-          // else if(ourTechnologiesSection.sectionFileName) {
-          //   await bucket.file(`homepage/${ourTechnologiesSection.sectionFileName}`).delete();
-          // }
-
+  
           // Get updated image URL
           const imageUrl = await getDownloadURL(blob);
 
@@ -267,168 +170,17 @@ export const ourMissionOurTechnologiesUpdateController = async (req, res) => {
         res.status(200).json({ message: 'Sections updated successfully', data: { ourMissionSection, ourTechnologiesSection } });
       }
     } catch (error) {
-      console.error('Error updating sections:', error);
       res.status(500).json({ message: 'Failed to update sections', error: error.message });
     }
   });
 };
 
 
-// // Function to update header data
-// export const updateHeader = async (req, res) => {
-//   try {
-//       console.log("Updating header data...");
-
-//       const { sectionText, sectionMedia } = req.body;
-
-//       // Update the header section in the database
-//       const updatedSection = await section.findOneAndUpdate(
-//           { sectionName: "header" },
-//           { sectionText, sectionMedia },
-//           { new: true, upsert: true }
-//       );
-
-//       console.log("Header data updated successfully:", updatedSection);
-
-//       // Send the response with the updated section
-//       res.send(updatedSection);
-//   } catch (error) {
-//       console.error('Error updating header section:', error);
-//       res.status(500).json({ message: 'Failed to update header section data', error: error.message });
-//   }
-// };
-
 const header = multer({ storage: storage }).fields([
   { name: 'videoFile', maxCount: 1 },
   { name: 'imageFile', maxCount: 1 }
 ]);
 
-// export const updateHeader = async (req, res) => {
-//   header(req, res, async (err) => {
-//     if (err instanceof multer.MulterError) {
-//       return res.status(400).json({ message: 'Multer Error', error: err.message });
-//     } else if (err) {
-//       return res.status(500).json({ message: 'Unexpected error during file upload', error: err.message });
-//     }
-
-//     const { sectionText, videoChange0, imageChange1 } = req.body;
-//     const { videoFile, imageFile } = req.files || {};
-
-//     try {
-//       // Find the document by sectionName 'header'
-//       let headerSection = await section.findOne({ sectionName: 'header' });
-
-//       if (!headerSection) {
-//         return res.status(404).json({ message: 'Header section not found' });
-//       }
-
-//       // Update the sectionText field
-//       if (sectionText) {
-//         headerSection.sectionText = sectionText;
-//       }
-
-//       // Handle video file upload
-//       if (videoChange0 === 'true' && videoFile) {
-//         const file = videoFile[0];
-
-//         // Sanitize file name
-//         const sanitizedFileName = file.originalname.replace(/[^a-zA-Z0-9.\-_]/g, '');
-//         const filePath = `homepage/${sanitizedFileName}`;
-
-//         // Create a write stream to upload to Firebase Storage
-//         const blob = bucket.file(filePath);
-//         const blobStream = blob.createWriteStream({
-//           metadata: {
-//             contentType: file.mimetype,
-//           },
-//         });
-
-//         // Handle errors during upload
-//         blobStream.on('error', (err) => {
-//           console.error('Error uploading video to Firebase:', err);
-//           return res.status(500).json({ message: 'Failed to upload video to Firebase', error: err.message });
-//         });
-
-//         // Handle successful upload
-//         blobStream.on('finish', async () => {
-//           // Delete old video from Firebase Storage if it exists
-//           if (headerSection.sectionMediaUrl[0]) {
-//             await bucket.file(headerSection.sectionMediaUrl[0]).delete();
-//           }
-
-//           // Get updated video URL
-//           const videoUrl = await getDownloadURL(blob);
-
-//           // Update section document with new video data
-//           headerSection.sectionMediaUrl[0] = videoUrl; // Store download URL in MongoDB
-//           headerSection.sectionFileName[0] = sanitizedFileName;
-
-//           // await headerSection.save();
-
-//           // res.status(200).json({ message: 'Header section updated successfully', data: headerSection });
-//         });
-
-//         blobStream.end(file.buffer); // End the stream with file buffer data
-//       }
-
-//       // Handle image file upload
-//       if (imageChange1 === 'true' && imageFile) {
-//         const file = imageFile[0];
-
-//         // Sanitize file name
-//         const sanitizedFileName = file.originalname.replace(/[^a-zA-Z0-9.\-_]/g, '');
-//         const filePath = `homepage/${sanitizedFileName}`;
-
-//         // Create a write stream to upload to Firebase Storage
-//         const blob = bucket.file(filePath);
-//         const blobStream = blob.createWriteStream({
-//           metadata: {
-//             contentType: file.mimetype,
-//           },
-//         });
-
-//         // Handle errors during upload
-//         blobStream.on('error', (err) => {
-//           console.error('Error uploading image to Firebase:', err);
-//           return res.status(500).json({ message: 'Failed to upload image to Firebase', error: err.message });
-//         });
-
-//         // Handle successful upload
-//         blobStream.on('finish', async () => {
-//           // Delete old image from Firebase Storage if it exists
-//           if (headerSection.sectionMediaUrl[1]) {
-//             await bucket.file(headerSection.sectionMediaUrl[1]).delete();
-//           }
-
-//           // Get updated image URL
-//           const imageUrl = await getDownloadURL(blob);
-
-//           // Update section document with new image data
-//           headerSection.sectionMediaUrl[1] = imageUrl; // Store download URL in MongoDB
-//           headerSection.sectionFileName[1] = sanitizedFileName;
-
-//           // await headerSection.save();
-
-//           // res.status(200).json({ message: 'Header section updated successfully', data: headerSection });
-//         });
-
-//         blobStream.end(file.buffer); // End the stream with file buffer data
-//       }
-
-//       // If neither videoFile nor imageFile was provided, update sectionText only
-//       // if (!videoFile && !imageFile) {
-//       //   await headerSection.save();
-//       //   res.status(200).json({ message: 'Header section updated successfully', data: headerSection });
-//       // }
-
-//       await headerSection.save();
-//       res.status(200).json({ message: 'Header section updated successfully', data: headerSection });
-//     } catch (error) {
-//       console.error('Error updating header section:', error);
-//       res.status(500).json({ message: 'Failed to update header section', error: error.message });
-//     }
-//   });
-// };
 
 export const updateHeader = async (req, res) => {
   header(req, res, async (err) => {
@@ -468,7 +220,6 @@ export const updateHeader = async (req, res) => {
       await headerSection.save();
       res.status(200).json({ message: 'Header section updated successfully', data: headerSection });
     } catch (error) {
-      console.error('Error updating header section:', error);
       res.status(500).json({ message: 'Failed to update header section', error: error.message });
     }
   });
@@ -491,7 +242,6 @@ const handleVideoUpload = async (headerSection, videoFile) => {
 
     // Handle errors during upload
     blobStream.on('error', (err) => {
-      console.error('Error uploading video to Firebase:', err);
       throw new Error('Failed to upload video to Firebase');
     });
 
@@ -515,7 +265,6 @@ const handleVideoUpload = async (headerSection, videoFile) => {
 
     blobStream.end(videoFile.buffer); // End the stream with file buffer data
   } catch (error) {
-    console.error('Error handling video upload:', error);
     throw new Error('Failed to handle video upload');
   }
 };
@@ -537,7 +286,6 @@ const handleImageUpload = async (headerSection, imageFile) => {
 
     // Handle errors during upload
     blobStream.on('error', (err) => {
-      console.error('Error uploading image to Firebase:', err);
       throw new Error('Failed to upload image to Firebase');
     });
 
@@ -561,7 +309,47 @@ const handleImageUpload = async (headerSection, imageFile) => {
 
     blobStream.end(imageFile.buffer); // End the stream with file buffer data
   } catch (error) {
-    console.error('Error handling image upload:', error);
     throw new Error('Failed to handle image upload');
   }
 };
+
+
+export const achievementAdd=async(req,res)=>{
+  try {
+    const newAchievement = new achievement(req.body);
+    const savedAchievement = await newAchievement.save();
+    res.status(201).json(savedAchievement);
+  } catch (error) {
+    res.status(500).json({ message: "Error adding achievement", error });
+  }
+}
+
+
+
+export const achievementUpdate = async(req,res)=>{
+  try {
+    const updatedAchievement = await achievement.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!updatedAchievement) {
+      return res.status(404).json({ message: "Achievement not found" });
+    }
+    res.json(updatedAchievement);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating achievement", error });
+  }
+}
+
+export const achievementDelete = async(req,res)=>{
+  try {
+    const deletedAchievement = await achievement.findByIdAndDelete(req.params.id);
+    if (!deletedAchievement) {
+      return res.status(404).json({ message: "Achievement not found" });
+    }
+    res.json({ message: "Achievement deleted" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting achievement", error });
+  }
+}

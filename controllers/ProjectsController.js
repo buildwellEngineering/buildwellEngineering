@@ -4,86 +4,35 @@ import bucket from "../firebaseConfig/FirebaseConfig.js";
 import { getDownloadURL } from "firebase-admin/storage";
 
 
-//og
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage: storage }).single('file');
-
-
-// export const addProject=async(req,res)=>{
-//     upload(req, res, async (err) => {
-//         if (err) {
-//             console.log('0')
-//           return res.status(500).send(err.message);
-//         }
-//         console.log('1')
-//         try {
-//           const file = req.file;
-//           const blob = bucket.file(`projects/${file.originalname}`);
-//           console.log(blob)
-//           const blobStream = blob.createWriteStream({
-//             metadata: {
-//               contentType: file.mimetype,
-//             },
-//           });
-    
-//           blobStream.on('error', (err) => {
-//             console.log('2')
-//             res.status(500).send(err);
-//           });
-    
-//           blobStream.on('finish', async () => {
-//             const mediaUrl = `https://storage.googleapis.com/${bucket.name}/projects/${file.originalname}`;
-//             const newProject = new project({
-//               projectTitle: req.body.projectTitle,
-//               projectMediaUrl: mediaUrl,
-//               projectDescription: req.body.projectDescription,
-//               projectDisplay: req.body.projectDisplay,
-//             });
-    
-//             const savedProject = await newProject.save();
-//             res.status(201).json(savedProject);
-//           });
-    
-//           blobStream.end(file.buffer);
-//         } catch (error) {
-//             console.log('3')
-//           res.status(500).send(error.message);
-//         }
-//       });
-// }
-
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage }).single('mediaUrl'); // Adjust the field name as per your frontend
 const update = multer({ storage: storage }).single('mediaUrlupdate');
 
 export const addProject = async (req, res) => {
-    console.log('0')
     upload(req, res, async (err) => {
         if (err) {
             return res.status(500).send(err.message);
         }
-        console.log('1')
         try {
             const file = req.file;
-            console.log(file,file.originalname)
+
             const sanitizedFileName = file.originalname.replace(/[^a-zA-Z0-9.\-_]/g, '');
             const filePath = `projects/${sanitizedFileName}`;
-            console.log(filePath)
             const blob = bucket.file(`projects/${sanitizedFileName}`);
+
             const blobStream = blob.createWriteStream({
                 metadata: {
                     contentType: file.mimetype,
                 },
             });
-            console.log('98')
+
             blobStream.on('error', (err) => {
                 res.status(500).send(err);
             });
 
             blobStream.on('finish', async () => {
             const url =  await getDownloadURL(blob)
-              console.log(url)    
             
                 const newProject = new project({
                     projectTitle: req.body.title,
@@ -107,9 +56,7 @@ export const addProject = async (req, res) => {
 // Function to delete a project
 export const deleteProject = async (req, res) => {
     try {
-        console.log(67+9)
         const {projectId} = req.body;
-        console.log(projectId)
         const Project = await project.findById(projectId);
         
         if (!Project) {
@@ -216,12 +163,10 @@ export const updateProject = async (req, res) => {
                     res.status(200).json(updatedProject);
                 }
             } catch (error) {
-                console.error('Error updating project:', error.message);
                 res.status(500).send(error.message);
             }
         });
     } catch (error) {
-        console.error('Error handling file upload:', error.message);
         res.status(500).send(error.message);
     }
 };

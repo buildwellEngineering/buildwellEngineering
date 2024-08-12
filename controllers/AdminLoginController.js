@@ -94,13 +94,13 @@ export const verifyOtp = async (req, res) => {
         // Set token in cookies
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // Set to true if using HTTPS
+            secure: true, // Set to true if using HTTPS
             sameSite: 'None', // Adjust based on your setup
             maxAge: 3600000 // 1 hour
         });
 
         // Update user login status and clear OTP fields
-        await adminUser.updateOne({ email }, { loginStatus: true, otp: null, otpExpiresAt: null });
+        await adminUser.updateOne({ email }, { otp: null, otpExpiresAt: null });
 
         const msg = `${email} has logged in. Welcome !!!`;
 

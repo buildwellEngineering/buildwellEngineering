@@ -31,7 +31,6 @@ const messageSchema =mongoose.Schema({
     }
 },{timeStamps:true});
 
-// const blogUser = mongoose.model.blogUser || mongoose.model("blogUser",userSchema);
  const Message = mongoose.model('message', messageSchema);
 
 export default Message;

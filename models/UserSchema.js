@@ -3,13 +3,11 @@ import mongoose from "mongoose";
 const userSchema =mongoose.Schema({
     email:{
         type:String,
+        required: true
     },
     password:{
         type:String, 
-    },
-    loginStatus:{
-        type:Boolean,
-        default:false
+        required: true
     },
     otp: {
         type: String,
@@ -19,7 +17,6 @@ const userSchema =mongoose.Schema({
     }
 },{timeStamps:true});
 
-// const blogUser = mongoose.model.blogUser || mongoose.model("blogUser",userSchema);
  const adminUser = mongoose.model('adminUser', userSchema);
 
 export default adminUser;

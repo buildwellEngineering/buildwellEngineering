@@ -19,7 +19,6 @@ const projectSchema =mongoose.Schema({
     }
 },{timeStamps:true});
 
-// const blogUser = mongoose.model.blogUser || mongoose.model("blogUser",userSchema);
  const project = mongoose.model('project', projectSchema);
 
 export default project;

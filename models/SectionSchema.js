@@ -15,7 +15,6 @@ const sectionSchema =mongoose.Schema({
     }
 },{timeStamps:true});
 
-// const blogUser = mongoose.model.blogUser || mongoose.model("blogUser",userSchema);
  const section = mongoose.model('section', sectionSchema);
 
 export default section;

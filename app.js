@@ -19,7 +19,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 
 const corsOptions = {
-    origin: ['http://localhost:3000', 'https://build-well-front-end.vercel.app'],
+    origin: ['http://localhost:3000', 'https://build-well-front-end.vercel.app', 'https://build-well-front-end-three.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
     allowedHeaders: ['Content-Type'], // Allowed headers
     credentials: true // If you need credentials

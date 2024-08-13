@@ -53,15 +53,15 @@ export const submitMessage = async (req, res) => {
 
     const {data} = req.body;
     
-    const newMessage = new Message({
+    const newMessage =await new Message({
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email,
         subject: data.subject,
         message: data.message,
-    })
+    }).save();
 
-    await newMessage.save();
+  
     res.send({ success: 'Message submitted' });
   } catch (error) {
     res.status(500).send({ error: 'Internal server error' });

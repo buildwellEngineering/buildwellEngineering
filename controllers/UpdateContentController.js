@@ -314,42 +314,70 @@ const handleImageUpload = async (headerSection, imageFile) => {
 };
 
 
-export const achievementAdd=async(req,res)=>{
+
+export const achievementAdd = async (req, res) => {
   try {
-    const newAchievement = new achievement(req.body);
+    // Extract data from req.body
+    const { name, value } = req.body;
+
+    // Perform any additional processing or validation here
+    if (!name || !value) {
+      return res.status(400).json({ message: "Name and value are required" });
+    }
+
+    // Create a new achievement instance
+    const newAchievement = new achievement({ name, value });
+
+    // Save to the database
     const savedAchievement = await newAchievement.save();
+
+    // Respond with the saved achievement
     res.status(201).json(savedAchievement);
   } catch (error) {
     res.status(500).json({ message: "Error adding achievement", error });
   }
-}
+};
 
-
-
-export const achievementUpdate = async(req,res)=>{
+export const achievementUpdate = async (req, res) => {
   try {
+    // Extract data from req.body
+    const { name, value } = req.body;
+
+    // Perform any additional processing or validation here
+    if (!name || !value) {
+      return res.status(400).json({ message: "Name and value are required" });
+    }
+
+    // Find and update the achievement
     const updatedAchievement = await achievement.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      { name, value },
       { new: true }
     );
+
     if (!updatedAchievement) {
       return res.status(404).json({ message: "Achievement not found" });
     }
+
+    // Respond with the updated achievement
     res.json(updatedAchievement);
   } catch (error) {
     res.status(500).json({ message: "Error updating achievement", error });
   }
-}
+};
 
-export const achievementDelete = async(req,res)=>{
+export const achievementDelete = async (req, res) => {
   try {
+    // Find and delete the achievement
     const deletedAchievement = await achievement.findByIdAndDelete(req.params.id);
+
     if (!deletedAchievement) {
       return res.status(404).json({ message: "Achievement not found" });
     }
+
+    // Respond with a success message
     res.json({ message: "Achievement deleted" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting achievement", error });
   }
-}
+};

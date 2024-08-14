@@ -130,17 +130,24 @@ export const updateProject = async (req, res) => {
                             // Get updated image URL
                             imageUrl = await getDownloadURL(blob);
 
-                            // Update project in MongoDB with new data
+                            const updateData = {
+                                projectTitle: req.body.title,
+                                projectDescription: req.body.description,
+                                projectMediaUrl: imageUrl,
+                                projectFileName: sanitizedFileName,
+                            };
+                            
+                            // Include projectDisplay only if it's present in the request body
+                            if (req.body.projectDisplay !== undefined) {
+                                updateData.projectDisplay = req.body.projectDisplay;
+                            }
+                            
                             const updatedProject = await project.findByIdAndUpdate(
                                 projectId,
-                                {   projectDisplay: req.body.projectDisplay,
-                                    projectTitle: req.body.title,
-                                    projectDescription: req.body.description,
-                                    projectMediaUrl: imageUrl,
-                                    projectFileName: sanitizedFileName, // Update filename in project schema
-                                },
+                                updateData,
                                 { new: true }
                             );
+                            
 
                             res.status(200).json(updatedProject);
                         });
@@ -151,15 +158,22 @@ export const updateProject = async (req, res) => {
                     }
                 } else {
                     // No new image, update project without changing the image URL
+                    const updateData = {
+                        projectTitle: req.body.title,
+                        projectDescription: req.body.description,
+                    };
+                    
+                    // Include projectDisplay only if it's present in the request body
+                    if (req.body.projectDisplay !== undefined) {
+                        updateData.projectDisplay = req.body.projectDisplay;
+                    }
+                    
                     const updatedProject = await project.findByIdAndUpdate(
                         projectId,
-                        {   
-                            projectDisplay: req.body.projectDisplay,
-                            projectTitle: req.body.title,
-                            projectDescription: req.body.description,
-                        },
+                        updateData,
                         { new: true }
                     );
+                    
 
                     res.status(200).json(updatedProject);
                 }

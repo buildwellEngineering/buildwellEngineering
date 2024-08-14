@@ -22,7 +22,7 @@ const corsOptions = {
     origin: ['https://buildwellengineering.com','https://www.buildwellengineering.com','https://build-well-front-end.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
     allowedHeaders: ['Content-Type'], // Allowed headers
-    credentials: true // If you need credentials
+    // credentials: true // If you need credentials
 };
 app.use("*",cors(corsOptions));
 con();

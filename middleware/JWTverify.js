@@ -5,12 +5,12 @@ import adminUser from '../models/UserSchema.js'; // Adjust the import path as ne
 
 export const authenticateToken = async (req, res, next) => {
     const token = req.cookies.accessToken;
+    console.log(token)
 
     if (!token) {
         // No token provided
         return res.status(401).json({ error: 'No token provided', loginStatus: false });
     }
-
     try {
         // Verify token and extract payload
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);

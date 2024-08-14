@@ -74,6 +74,7 @@ export const deleteProject = async (req, res) => {
 
 // Function to update a project
 export const updateProject = async (req, res) => {
+    console.log(req.body.projectDisplay)
     try {
         // Handle file upload using multer middleware
         update(req, res, async (err) => {
@@ -137,6 +138,8 @@ export const updateProject = async (req, res) => {
                                 projectFileName: sanitizedFileName,
                             };
                             
+                            console.log(req.body.projectDisplay)
+
                             // Include projectDisplay only if it's present in the request body
                             if (req.body.projectDisplay !== undefined) {
                                 updateData.projectDisplay = req.body.projectDisplay;
@@ -162,6 +165,7 @@ export const updateProject = async (req, res) => {
                         projectTitle: req.body.title,
                         projectDescription: req.body.description,
                     };
+                    console.log(req.body.projectDisplay)
                     
                     // Include projectDisplay only if it's present in the request body
                     if (req.body.projectDisplay !== undefined) {

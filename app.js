@@ -24,7 +24,7 @@ const corsOptions = {
     allowedHeaders: ['Content-Type'], // Allowed headers
     credentials: true // If you need credentials
 };
-app.use(cors(corsOptions));
+app.use("*",cors(corsOptions));
 con();
 
 app.use('/adminLogin', adminPanelLoginRouter);

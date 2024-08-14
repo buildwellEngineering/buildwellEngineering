@@ -133,7 +133,7 @@ export const updateProject = async (req, res) => {
                             // Update project in MongoDB with new data
                             const updatedProject = await project.findByIdAndUpdate(
                                 projectId,
-                                {
+                                {   projectDisplay: req.body.projectDisplay,
                                     projectTitle: req.body.title,
                                     projectDescription: req.body.description,
                                     projectMediaUrl: imageUrl,
@@ -153,7 +153,8 @@ export const updateProject = async (req, res) => {
                     // No new image, update project without changing the image URL
                     const updatedProject = await project.findByIdAndUpdate(
                         projectId,
-                        {
+                        {   
+                            projectDisplay: req.body.projectDisplay,
                             projectTitle: req.body.title,
                             projectDescription: req.body.description,
                         },

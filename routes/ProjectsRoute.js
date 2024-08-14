@@ -8,6 +8,6 @@ const router = express.Router();
 router.post('/add',authenticateToken,addProject)
 router.get('/getProjects',getProjects)
 router.delete('/delete',authenticateToken,deleteProject)
-router.put('/update',updateProject)
+router.put('/update',authenticateToken,updateProject)
 
 export default router;

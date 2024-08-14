@@ -5,7 +5,6 @@ import adminUser from '../models/UserSchema.js'; // Adjust the import path as ne
 
 export const authenticateToken = async (req, res, next) => {
     const token = req.cookies.accessToken;
-    console.log(token)
 
     if (!token) {
         // No token provided

@@ -175,7 +175,7 @@ export const ourMissionOurTechnologiesUpdateController = async (req, res) => {
   });
 };
 
-
+/*
 const header = multer({ storage: storage }).fields([
   { name: 'videoFile', maxCount: 1 },
   { name: 'imageFile', maxCount: 1 }
@@ -313,6 +313,99 @@ const handleImageUpload = async (headerSection, imageFile) => {
   }
 };
 
+*/
+
+const header = multer({ storage: storage }).fields([
+  { name: 'imageFile', maxCount: 1 },
+  { name: 'mediaImageDesktopFile', maxCount: 1 }
+]);
+
+export const updateHeader = async (req, res) => {
+  header(req, res, async (err) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({ message: 'Multer Error', error: err.message });
+    } else if (err) {
+      return res.status(500).json({ message: 'Unexpected error during file upload', error: err.message });
+    }
+
+    const { sectionText, imageChange1, mediaImageDesktopChange1 } = req.body;
+    const { imageFile, mediaImageDesktopFile } = req.files || {};
+
+    try {
+      // Find the document by sectionName 'header'
+      let headerSection = await section.findOne({ sectionName: 'header' });
+
+      if (!headerSection) {
+        return res.status(404).json({ message: 'Header section not found' });
+      }
+
+      // Handle main image file upload if imageChange1 is 'true'
+      if (imageChange1 === 'true' && imageFile) {
+        await handleImageUpload(headerSection, imageFile[0], 1);
+      }
+
+      // Handle desktop image file upload if mediaImageDesktopChange1 is 'true'
+      if (mediaImageDesktopChange1 === 'true' && mediaImageDesktopFile) {
+        await handleImageUpload(headerSection, mediaImageDesktopFile[0], 0);
+      }
+
+      // Update the sectionText field
+      if (sectionText) {
+        headerSection.sectionText = sectionText;
+      }
+
+      // Save header section after all updates
+      await headerSection.save();
+      res.status(200).json({ message: 'Header section updated successfully', data: headerSection });
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to update header section', error: error.message });
+    }
+  });
+};
+
+// Helper function to handle image file upload
+const handleImageUpload = async (headerSection, imageFile, index) => {
+  try {
+    // Sanitize file name
+    const sanitizedFileName = imageFile.originalname.replace(/[^a-zA-Z0-9.\-_]/g, '');
+    const filePath = `homepage/${sanitizedFileName}`;
+
+    // Create a write stream to upload to Firebase Storage
+    const blob = bucket.file(filePath);
+    const blobStream = blob.createWriteStream({
+      metadata: {
+        contentType: imageFile.mimetype,
+      },
+    });
+
+    // Handle errors during upload
+    blobStream.on('error', (err) => {
+      throw new Error('Failed to upload image to Firebase');
+    });
+
+    // Handle successful upload
+    blobStream.on('finish', async () => {
+      // Delete old image from Firebase Storage if it exists
+      if (headerSection.sectionFileName[index]) {
+        await bucket.file(`homepage/${headerSection.sectionFileName[index]}`).delete();
+      }
+
+      // Get updated image URL
+      const imageUrl = await getDownloadURL(blob);
+
+      // Update section document with new image data
+      headerSection.sectionMediaUrl[index] = imageUrl;
+      headerSection.sectionFileName[index] = sanitizedFileName;
+
+      // Save header section after image update
+      await headerSection.save();
+    });
+
+    blobStream.end(imageFile.buffer); // End the stream with file buffer data
+  } catch (error) {
+    throw new Error('Failed to handle image upload');
+  }
+};
 
 
 export const achievementAdd = async (req, res) => {
